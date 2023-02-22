@@ -1,6 +1,8 @@
-for i=1:1
-    readIndexString = num2str(i+1);
-    filename = ['SDS0000' readIndexString '.csv'];
+clear;
+for i=1:30
+    index = num2str(i+1);
+    filename = ['SDS0000' index '.cs'
+    2.csv';
     data = csvread(filename);
     col2 = data(:, 2); %data
     col3 = data(:, 3); %trigger
@@ -19,15 +21,15 @@ for i=1:1
     %Extract only AES part of signal with trigger signal
     startIndexAES = 0;
     stopIndexAES = length(col3);
-    for j=1:length(col3)
-        if col3(j) > 4
-            startIndexAES=j;
+    for i=1:length(col3)
+        if col3(i) > 4
+            startIndexAES=i;
             break;
         end
     end
-    for j=startIndexAES:length(col3)
-        if col3(j) < 4
-            stopIndexAES=j;
+    for i=startIndexAES:length(col3)
+        if col3(i) < 4
+            stopIndexAES=i;
             break;
         end
     end
@@ -35,17 +37,15 @@ for i=1:1
     startLastRoundAES = floor(stopIndexAES - roundSampleCount);
     signalData=[];
     triggerData=[];
-    for j=1:length(col2)
-        if j >= startLastRoundAES && j <= stopIndexAES
-            signalData(end + 1) = col2(j);
-            triggerData(end + 1) = col3(j);
+    for i=1:length(col2)
+        if i >= startLastRoundAES && i <= stopIndexAES
+            signalData(end + 1) = col2(i);
+            triggerData(end + 1) = col3(i);
         end
     end
     sampleNumber = [1:length(signalData)];
     filtered_signal = filter(b,a,signalData);
-%     plot(sampleNumber, filtered_signal);
+    plot(sampleNumber, filtered_signal);
     csvMatrix = [sampleNumber(:), filtered_signal(:)];
-    outputIndexString = num2str(i);
-    outputName = ['samplex' outputIndexString '.csv'];
-    csvwrite(outputName, csvMatrix);
+    csvwrite('test.csv', csvMatrix);
 end
